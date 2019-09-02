@@ -19,7 +19,7 @@ class ProspectoController extends Controller
             return view('prospectos');
           }
           public function prospectos_tabla(Request $request){
-            $prospectos = Prospecto::with('user','estado')->get();
+            $prospectos = Prospecto::with('user','estado')->has('user')->get();
             return DataTables::of($prospectos)
 
                 ->addindexColumn()
@@ -60,7 +60,7 @@ class ProspectoController extends Controller
                   ->first();
               Mail::to($prospeto->user->correo)
                ->cc('operaciones@estrategicaco.com')
-              ->send(new AdminMail($contenido,'Nontificaci¨®n App Referidos'));
+              ->send(new AdminMail($contenido,'Nontificaciï¿½ï¿½n App Referidos'));
               $response = array(
                   'status' => 'success',
                   'msg' => $estado->nombre,
