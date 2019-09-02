@@ -143,8 +143,8 @@
                     {data: 'estado.nombre'},
                     {
                         defaultContent:
-                            '<button class="btn btn-warning dim" type="button"><i class="fa fa-edit editar"></i></button>'+
-                            '<button class="btn btn-info dim" type="button"><i class="fa fa-user info_auspiciador"></i></button>',
+                            '<button class="btn btn-warning dim btn-sm" type="button"><i class="fa fa-edit editar"></i></button>'+
+                            '<button class="btn btn-info dim btn-sm" type="button"><i class="fa fa-user info_auspiciador"></i></button>',
                         data: 'action',
                         name: 'action',
                         title: 'Acciones',

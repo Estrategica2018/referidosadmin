@@ -89,40 +89,43 @@
             <div class="col-lg-12">
               <div class="row  border-bottom white-bg dashboard-header">
                   <div class="row">
-                      <div class="panel panel-success">
-                          <div class="panel-heading">
-                              Estado Prospecto
-                          </div>
-                          <div class="panel-body">
-                              <div class="col-lg-4">
-                                  <h3>Oportunidad: Impresión</h3>
-                                  <h3>Estado Actual: <strong class="estado_strong">@php echo $estado; @endphp</strong></h3>
+                      <div class="col-md-12">
+                          <div class="panel panel-success">
+                              <div class="panel-heading">
+                                  Estado Prospecto
                               </div>
-                              <div class="col-lg-4">
-                                  <h3><strong>Agenda Actual</strong></h3>
-                                  <h3>Fecha: <strong class="agenda_strong"></strong></h3>
+                              <div class="panel-body">
+                                  <div class="col-lg-4">
+                                      <h3>Oportunidad: Impresiónnn</h3>
+                                      <h3>Estado Actual: <strong class="estado_strong">@php echo $estado; @endphp</strong></h3>
+                                  </div>
+                                  <div class="col-lg-4">
+                                      <h3><strong>Agenda Actual</strong></h3>
+                                      <h3>Fecha: <strong class="agenda_strong"></strong></h3>
+                                  </div>
+                                  <div class="col-lg-12">
+                                      <div class="table-responsive">
+                                          <br>
+                                          <button id='crear' class="btn btn-success " type="button"><i class="fa fa-plus"></i>&nbsp;Crear</button>
+                                          <br><br>
+                                          <table id="tblFolicular" class="table table-striped table-bordered table-hover dataTables-example" >
+                                              <thead>
+                                              <tr>
+                                                  <th>N°</th>
+                                                  <th>Estado</th>
+                                                  <th>Fecha Actualizacion</th>
+                                                  <th>Agenda</th>
+                                                  <th>Observacion</th>
+                                              </tr>
+                                              </thead>
+                                              <tbody></tbody>
+                                          </table>
+                                      </div>
+                                  </div>
                               </div>
-                            <div class="col-lg-12">
-                              <div class="table-responsive">
-                                  <br>
-                                  <button id='crear' class="btn btn-success " type="button"><i class="fa fa-plus"></i>&nbsp;Crear</button>
-                                  <br><br>
-                                  <table id="tblFolicular" class="table table-striped table-bordered table-hover dataTables-example" >
-                                      <thead>
-                                            <tr>
-                                                <th>N°</th>
-                                                <th>Estado</th>
-                                                <th>Fecha Actualizacion</th>
-                                                <th>Agenda</th>
-                                                <th>Observacion</th>
-                                            </tr>
-                                      </thead>
-                                      <tbody></tbody>
-                                </table>
-                              </div>
-                            </div>
                           </div>
                       </div>
+
                   </div>
               </div>
             </div>

@@ -45,5 +45,10 @@ Route::get('/prospectos_auspiciador_tabla/{id_auspiciador?}', 'AuspiciadorContro
 Route::get('/auspiciador_prospectos_detalles/{id_prospecto?}', 'AuspiciadorController@auspiciador_prospectos_detalles')
     ->name('auspiciador_prospectos_detalles');
 
+Route::post('/eliminar_auspiciador', 'AuspiciadorController@eliminar_auspiciador')
+    ->name('eliminar_auspiciador');
+Route::post('/inhabilitar_auspiciador', 'AuspiciadorController@inhabilitar_auspiciador')
+    ->name('inhabilitar_auspiciador');
+
 
 Auth::routes();

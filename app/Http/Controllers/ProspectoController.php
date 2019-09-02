@@ -19,7 +19,10 @@ class ProspectoController extends Controller
             return view('prospectos');
           }
           public function prospectos_tabla(Request $request){
-            $prospectos = Prospecto::with('user','estado')->has('user')->get();
+            $prospectos = Prospecto::with('user','estado')
+                ->whereHas('user',function ($query){
+                    $query->where('estado',true);
+                })->get();
             return DataTables::of($prospectos)
 
                 ->addindexColumn()

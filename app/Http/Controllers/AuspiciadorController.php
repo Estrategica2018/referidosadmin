@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Auspiciador;
 use App\Prospecto;
+use App\Trazabilidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
@@ -30,7 +31,7 @@ class AuspiciadorController extends Controller
         return view('auspiciadores');
     }
     public function auspiciadores_tabla(Request $request){
-      $auspiciadores = Auspiciador::all();
+      $auspiciadores = Auspiciador::where('estado',true)->get();
       return DataTables::of($auspiciadores)
           ->addindexColumn()
           ->make(true);
@@ -85,6 +86,39 @@ class AuspiciadorController extends Controller
         $response = array(
             'status' => 'success',
             'msg' => $arrayProspectos,
+        );
+        return response()->json($response);
+    }
+
+    public function eliminar_auspiciador (Request $request)
+    {
+
+        $auspiciador = Auspiciador::where('id_usuario',intval($request->get('auspiciador_id')))->first();
+
+        foreach ($auspiciador->prospectos as $prospecto){
+            Trazabilidad::where('id_prospecto',$prospecto->id_prospecto)->delete();
+        }
+        Prospecto::where('id_usuario',$auspiciador->id_usuario)->delete();
+        $auspiciador->where('id_usuario',$auspiciador->id_usuario)->delete();
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Auspiciador eliminado',
+        );
+        return response()->json($response);
+
+    }
+
+    public function inhabilitar_auspiciador (Request $request)
+    {
+        /*$auspiciador = Auspiciador::where('id_usuario',intval($request->get('auspiciador_id')))->first();
+        $auspiciador->estado = false;
+        $auspiciador->save();*/
+        Auspiciador::where('id_usuario',intval($request->get('auspiciador_id')))
+            ->update(['estado' => false]);
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Auspiciador inhabilitado',
         );
         return response()->json($response);
     }

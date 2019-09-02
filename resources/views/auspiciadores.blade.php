@@ -10,7 +10,7 @@
             <div class="modal-content animated bounceInLeft">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true"></span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Información De Prospecto</h4>
+                    <h4 class="modal-title">Información de Prospecto</h4>
                     <small class="font-bold">resultado de los prospectos registrados.</small>
                 </div>
                 <form  id="form" url='/forms' >
@@ -86,7 +86,9 @@
 
 @endsection
 @section('javascript')
-
+    <!--sweet-->
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!--dataTables-->
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script>
         $(document).ready(function(){
@@ -126,8 +128,10 @@
 
                     {
                         defaultContent:
-                            '<button class="btn btn-success dim btn-sm" type="button"><i class="fa fa-handshake-o prospectos"></i></button>'+
-                            '<button class="btn btn-info dim btn-sm" type="button"><i class="fa fa-bar-chart-o resultado"></i></button>',
+                            '<button title="ver porspectos" class="btn btn-success dim btn-sm prospectos" type="button"><i class="fa fa-handshake-o "></i></button>'+
+                            '<button title="resultado" class="btn btn-info dim btn-sm resultado" type="button"><i class="fa fa-bar-chart-o "></i></button>'+
+                            '<button title="eliminar" class="btn btn-danger dim btn-sm eliminar" type="button"><i class="fa fa-trash-o "></i></button>',
+
                         data: 'action',
                         name: 'action',
                         title: 'Acciones',
@@ -178,6 +182,86 @@
 
             $('#close_modal').on('click',function(){
                 $('#modal_resultados').hide();
+            });
+
+            auspiciador.on('click','.eliminar',function  (e) {
+                e.preventDefault();
+                $tr = $(this).closest('tr');
+                var dataTable = auspiciador.row($tr).data();
+                //window.location.href = "{{ route('auspiciador_prospecto')}}"+'/'+dataTable.id_usuario;
+                swal({
+                        title: "Elija una opción",
+                        text: "Para este auspiciador",
+                        type: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "Eliminar del sistema",
+                        cancelButtonText: "Inhabilitar",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            var route = "{{ route('eliminar_auspiciador')}}";
+                            var async = async || false;
+                            var formDatas = new FormData();
+                            formDatas.append('auspiciador_id',dataTable.id_usuario);
+                            $.ajax({
+                                url: route,
+                                type: 'POST',
+                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                cache: false,
+                                contentType: false,
+                                data: formDatas,
+                                processData: false,
+                                async: async,
+                                beforeSend: function () {
+                                },
+                                success: function (response, xhr, request) {
+                                    auspiciador.ajax.reload();
+                                    swal("Correcto", "Auspiciador eliminado!", "success")
+
+
+                                },
+                                error: function (response, xhr, request) {
+                                    console.log(response);
+                                    swal("Error", "Algo salio mal!", "error")
+                                    if (request.status === 422 && xhr === 'error') {
+                                        swal("Error", "Algo salio mal!", "error")
+                                    }
+                                }
+                            });
+                        } else {
+                            var route = "{{ route('inhabilitar_auspiciador')}}";
+                            var async = async || false;
+                            var formDatas = new FormData();
+                            formDatas.append('auspiciador_id',dataTable.id_usuario);
+                            $.ajax({
+                                url: route,
+                                type: 'POST',
+                                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                cache: false,
+                                contentType: false,
+                                data: formDatas,
+                                processData: false,
+                                async: async,
+                                beforeSend: function () {
+                                },
+                                success: function (response, xhr, request) {
+                                    auspiciador.ajax.reload();
+                                    swal("Correcto", "Auspiciador inhabilitado!", "success")
+
+
+                                },
+                                error: function (response, xhr, request) {
+                                    console.log(response);
+                                    swal("Error", "Algo salio mal!", "error")
+                                    if (request.status === 422 && xhr === 'error') {
+                                        swal("Error", "Algo salio mal!", "error")
+                                    }
+                                }
+                            });
+                        }
+                    });
             });
 
 
