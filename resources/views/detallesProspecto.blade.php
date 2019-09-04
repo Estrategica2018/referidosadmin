@@ -1,8 +1,22 @@
 @extends('layouts.home')
 
 @section('title', 'Inicio')
+@section('css')
+    <!-- Ladda style -->
+    <link href="{{ asset('css/plugins/ladda/ladda-themeless.min.css') }}" rel="stylesheet">
+@endsection
+
 
 @section('content')
+    <style>
+        .modal-header{
+           background-color: #1c84c6;
+            color: white;
+        }
+        .inmodal .modal-header {
+            padding: 6px 27px;
+        }
+    </style>
     <!--MODAL ACTUALIZAR PROSPECTO EVENTO -->
     <div class="modal inmodal" id="modal_acualizar" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" style="width:800px;">
@@ -61,7 +75,7 @@
                 </div>
                 <div class="modal-footer">
                     <button id="close_modal" type="button" class="btn btn-warning">Cerrar</button>
-                    <button class="btn btn-success" type="submit">Actualizar</button>
+                    <button class="ladda-button ladda-button-demo  btn btn-success" type="submit" id="" data-style="zoom-in">Actualizar</button>
                 </div>
                 </form>
             </div>
@@ -96,7 +110,7 @@
                               </div>
                               <div class="panel-body">
                                   <div class="col-lg-4">
-                                      <h3>Oportunidad: Impresiónnn</h3>
+                                      <h3>Oportunidad: <strong class="">@php echo $prospecto->oportunidad; @endphp</strong></h3>
                                       <h3>Estado Actual: <strong class="estado_strong">@php echo $estado; @endphp</strong></h3>
                                   </div>
                                   <div class="col-lg-4">
@@ -106,7 +120,7 @@
                                   <div class="col-lg-12">
                                       <div class="table-responsive">
                                           <br>
-                                          <button id='crear' class="btn btn-success " type="button"><i class="fa fa-plus"></i>&nbsp;Crear</button>
+                                          <button id='crear' class="btn btn-success btn-sm " type="button"><i class="fa fa-plus"></i>&nbsp;Crear</button>
                                           <br><br>
                                           <table id="tblFolicular" class="table table-striped table-bordered table-hover dataTables-example" >
                                               <thead>
@@ -138,9 +152,16 @@
   <script src="{{ asset('js/plugins/datapicker/datepicker-es.js') }}" ></script>
   <!--sweet-->
   <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+  <!-- dataTables -->
+  <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+  <!-- Ladda -->
+  <script src="{{asset('js/plugins/ladda/spin.min.js')}}"></script>
+  <script src="{{asset('js/plugins/ladda/ladda.min.js')}}"></script>
+  <script src="{{asset('js/plugins/ladda/ladda.jquery.min.js')}}"></script>
     <script>
         $(document).ready(function(){
+            var but = $('#btnActualizar').ladda();
+            but.ladda( 'start' );
             var id_prospecto  = '{{$id_prospecto}}';
             console.log('este es el id '+id_prospecto);
             $('.input-group.date').datepicker({
@@ -162,10 +183,22 @@
                     beforeSend: function () {
                     },
                     success: function (response, xhr, request) {
-                        console.log(response.msg);
                         $(".estado_strong").html(response.msg.estado.nombre);
-                        var agenda = response.msg.trazabilidad.fecha + ' '+response.msg.trazabilidad.hora;
-                        $(".agenda_strong").html(agenda);
+                        if(response.msg.trazabilidad != null){
+                            let date = new Date(response.msg.trazabilidad.fecha)
+
+                            let day = date.getDate()
+                            let month = date.getMonth() + 1
+                            let year = date.getFullYear()
+
+                            if(month < 10){
+                                $(".agenda_strong").html((`${day}-0${month}-${year} ${response.msg.trazabilidad.hora}`));
+                            }else{
+                                $(".agenda_strong").html((`${day}-${month}-${year}`));
+
+                            }
+                        }
+
 
                     },
                     error: function (response, xhr, request) {
@@ -210,7 +243,18 @@
                         if(data.fecha == ''){
                             return 'no asignada';
                         }else{
-                            return data.fecha+" "+data.hora;
+                            let date = new Date(data.fecha)
+
+                            let day = date.getDate()
+                            let month = date.getMonth() + 1
+                            let year = date.getFullYear()
+
+                            if(month < 10){
+                                return (`${day}-0${month}-${year} ${data.hora}`)
+                            }else{
+                                return (`${day}-${month}-${year}`)
+                            }
+
                         }
                     }},
                     {data: 'observacion'},
@@ -245,7 +289,8 @@
                                 processData: false,
                                 async: async,
                                 beforeSend: function () {
-
+                                    $('#btnActualizar').ladda();
+                                    $('#btnActualizar').ladda( 'start' );
                                 },
                                 success: function (response, xhr, request) {
                                     var res =  (response.msg);
@@ -262,9 +307,12 @@
                                         text: "se ha enviado un correo al auspiciador,notificando la acción!",
                                         type: "success"
                                     });
+                                    $('#btnActualizar').ladda( 'stop' );
+
 
                                 },
                                 error: function (response, xhr, request) {
+                                    $('#btnActualizar').ladda( 'stop' );
                                 }
                             });
                          }

@@ -33,7 +33,8 @@ class ProspectoController extends Controller
 
             return view('detallesProspecto')
                 ->with('id_prospecto',$id_prospecto)
-                ->with('estado',$prospecto->estado->nombre);
+                ->with('estado',$prospecto->estado->nombre)
+                ->with('prospecto',$prospecto);
 
           }
           public function estado_prospecto(Request $request ,$id_prospecto){
@@ -63,7 +64,7 @@ class ProspectoController extends Controller
                   ->first();
               Mail::to($prospeto->user->correo)
                ->cc('operaciones@estrategicaco.com')
-              ->send(new AdminMail($contenido,'Nontificaci��n App Referidos'));
+              ->send(new AdminMail($contenido,'Nontificación App Referidos'));
               $response = array(
                   'status' => 'success',
                   'msg' => $estado->nombre,
